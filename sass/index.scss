@@ -1,0 +1,17 @@
+.container {
+  max-width:600px;
+  width:100%;
+  padding: 20px;
+  margin:auto;
+  box-sizing: border-box;
+
+  input {
+    margin:10px 0;
+    width: 100%;
+    padding:5px;
+    box-sizing: border-box;
+  }
+  button {
+    margin: 10px 0;
+  }
+}
