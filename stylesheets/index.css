@@ -17,3 +17,25 @@
 .container button {
   margin: 10px 0;
 }
+
+/* line 20, ../sass/index.scss */
+#events ul {
+  padding: 0;
+}
+/* line 22, ../sass/index.scss */
+#events ul li {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid grey;
+  display: block;
+}
+/* line 27, ../sass/index.scss */
+#events ul li a {
+  display: block;
+  padding-top: 10px;
+  cursor: pointer;
+}
+/* line 32, ../sass/index.scss */
+#events ul li.future {
+  background-color: #EEEEEE;
+}

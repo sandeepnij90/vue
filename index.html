@@ -11,27 +11,114 @@
       <h1>Event manager</h1>
       <hr>
       <div id="addEvent">
-        <input type="text" placeholder="Title">
-        <input type="text" placeholder = "Location">
-        <input type="text" placeholder = "Description">
-        <input type="text" placeholder = "Start date">
-        <input type="text" placeholder = "End date">
-        <button type="button" name="button">Add an event</button>
-
+        <input id="title" type="text" placeholder="Title">
+        <input id="location" type="text" placeholder = "Location">
+        <input id="description" type="text" placeholder = "Description">
+        <input id="start" type="date" placeholder = "Start date">
+        <input id="end" type="date" placeholder = "End date">
+        <button v-on:click="addEvent" type="button" name="button">Add an event</button>
       </div>
 
-      <div id="app">
-        {{ message }}
+      <div id="events">
+        <ul>
+          <li v-for="(event,index) in events" :class="checkFuture(event.start)">
+            <h3>{{ event.title }}</h3>
+            <h4>{{ event.location}}</h4>
+            <p> {{ event.description }}</p>
+            <span>{{ event.start }} to {{ event.end }}</span>
+            <a v-on:click="showEdit">Edit</a>
+
+            <form v-if="displayEdit">
+              <hr>
+              <h2>Edit fields</h2>
+              <input id="Etitle" type="text" placeholder="Title" :value="event.title">
+              <input id="Elocation" type="text" placeholder= "Location" :value="event.location">
+              <input id="Edescription" type="text" placeholder= "Description" :value="event.description">
+              <input id="Estart" type="date" placeholder= "Start date" :value="event.start">
+              <input id="Eend" type="date" placeholder= "End date" :value="event.end">
+              <button v-on:click="editEvent(index)" type="button" name="button">Edit this event</button>
+            </form>
+          </li>
+        </ul>
       </div>
     </div>
 
     <script type="text/javascript">
-    var app = new Vue({
-      el: '#app',
-      data: {
-        message: 'Hello Vue!'
+    var mainEvents = [];
+    // mainEvents.push(
+    //   {
+    //     'title':'this is the title'
+    //   }
+    // )
+    var addEvent = new Vue({
+      el: '#addEvent',
+      methods: {
+        addEvent: function() {
+          // get the values from the form
+          var title = document.getElementById('title').value;
+          var location = document.getElementById('location').value;
+          var description = document.getElementById('description').value;
+          var start = document.getElementById('start').value;
+          var end = document.getElementById('end').value;
+
+          // if the validation passes push into the mainEvents array else show error
+          if (title == '' || location == '' || description == '' || start == '' || end == '') {
+            alert("please enter all fields before adding an event");
+          } else if(start > end) {
+            alert('Your end date cannot be before your start date');
+          } else { // add the event to main events array
+            var enteredEvent = {
+              'title' : title,
+              'location' : location,
+              'description' : description,
+              'start' : start,
+              'end' : end,
+            }
+            mainEvents.push(enteredEvent);
+          }
+        }
       }
-    })
+    });
+    var loadEvents = new Vue({
+      el: '#events',
+      data: {
+        events : mainEvents,
+        displayEdit : false
+      },
+      methods: {
+        showEdit: function() {
+          if (loadEvents.displayEdit == true) {
+            loadEvents.displayEdit = false;
+          } else {
+            loadEvents.displayEdit = true;
+          }
+        },
+        editEvent: function(index) {
+          mainEvents[index].title = document.getElementById('Etitle').value;
+          mainEvents[index].location = document.getElementById('Elocation').value;
+          mainEvents[index].description = document.getElementById('Edescription').value;
+          mainEvents[index].start = document.getElementById('Estart').value;
+          mainEvents[index].end = document.getElementById('Eend').value;
+          loadEvents.displayEdit = false;
+        },
+        checkFuture: function(start) {
+          var currentDt = new Date();
+          var mm = currentDt.getMonth() + 1;
+          var dd = currentDt.getDate();
+          var yyyy = currentDt.getFullYear();
+
+          if (mm < 10) {
+            var date = yyyy+'-0'+mm+'-'+ dd;
+
+          } else {
+            var date = yyyy+'-'+mm+'-'+ dd;
+          }
+          if(start > date) {
+            return 'future';
+          }
+        }
+      }
+    });
     </script>
   </body>
 </html>
